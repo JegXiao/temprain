@@ -105,7 +105,7 @@ class WidgetKeepAliveService : Service() {
         val cityIdx = WeatherStore.load(this).cityIdx
         Thread {
             try {
-                val body = QWeatherClient.get("weather/now", cityIdx, WeatherStore.DEFAULT_KEY)
+                val body = QWeatherClient.get("weather/now", cityIdx, WeatherStore.getKey(this))
                 val state = WeatherStore.load(this)
                 QWeatherClient.parseNow(body, state)
                 state.lastNowMs = System.currentTimeMillis()
@@ -119,7 +119,7 @@ class WidgetKeepAliveService : Service() {
         val cityIdx = WeatherStore.load(this).cityIdx
         Thread {
             try {
-                val body = QWeatherClient.get("weather/24h", cityIdx, WeatherStore.DEFAULT_KEY)
+                val body = QWeatherClient.get("weather/24h", cityIdx, WeatherStore.getKey(this))
                 val state = WeatherStore.load(this)
                 QWeatherClient.parse24h(body, state)
                 state.last24hMs = System.currentTimeMillis()

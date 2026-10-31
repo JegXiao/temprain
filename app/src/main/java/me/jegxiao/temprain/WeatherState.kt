@@ -116,6 +116,18 @@ object WeatherStore {
         return s
     }
 
-    /** API Key 来自 local.properties → BuildConfig（外部文件，不入仓库）。APP 内无查看/修改入口 */
-    val DEFAULT_KEY: String get() = BuildConfig.QWEATHER_KEY
+    /** 编译期注入的 Key（来自 local.properties → BuildConfig），作为输入框预填与兜底 */
+    val BUILD_KEY: String get() = BuildConfig.QWEATHER_KEY
+
+    /** 生效 Key：APP 内保存的优先，其次编译期注入的（可能为空） */
+    fun getKey(ctx: Context): String =
+        ctx.getSharedPreferences(SP, Context.MODE_PRIVATE)
+            .getString("qkey", null)?.takeIf { it.isNotBlank() } ?: BUILD_KEY
+
+    /** APP 内保存 Key；传空串清除，回退到编译期注入的 Key */
+    fun setKey(ctx: Context, key: String) {
+        ctx.getSharedPreferences(SP, Context.MODE_PRIVATE).edit()
+            .putString("qkey", key.trim())
+            .apply()
+    }
 }

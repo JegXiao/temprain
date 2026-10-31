@@ -56,11 +56,11 @@ class WeatherWidgetProvider : AppWidgetProvider() {
             val state = WeatherStore.load(context)
             // 缓存超过 30 分钟且配置了 key：后台线程尝试同步拉一次实时数据
             val stale = System.currentTimeMillis() - state.lastNowMs > 30 * 60_000
-            if (allowNetwork && stale && WeatherStore.DEFAULT_KEY.isNotBlank()) {
+            if (allowNetwork && stale && WeatherStore.getKey(context).isNotBlank()) {
                 try {
                     val t = Thread {
                         try {
-                            val body = QWeatherClient.get("weather/now", state.cityIdx, WeatherStore.DEFAULT_KEY)
+                            val body = QWeatherClient.get("weather/now", state.cityIdx, WeatherStore.getKey(context))
                             QWeatherClient.parseNow(body, state)
                             state.lastNowMs = System.currentTimeMillis()
                             WeatherStore.save(context, state)

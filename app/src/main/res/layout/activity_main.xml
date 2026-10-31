@@ -78,6 +78,40 @@
                 android:textColor="#C9D1D9" />
         </RadioGroup>
 
+        <!-- API Key -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔑 和风天气 API Key"
+            android:textColor="#3FB950"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/key_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="编译时未注入则在此填写"
+                android:textColorHint="#555C66"
+                android:textColor="#C9D1D9"
+                android:textSize="12sp"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/btn_save_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保存" />
+        </LinearLayout>
+
         <!-- 操作按钮 -->
         <LinearLayout
             android:layout_width="match_parent"

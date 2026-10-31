@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -69,6 +70,15 @@ class MainActivity : Activity() {
             WeatherStore.save(this, state)
             fetchNow(true)
             fetch24h(true)
+        }
+
+        // API Key：预填当前生效值（编译期注入的，或 APP 内已保存的），保存后立即生效
+        val keyEdit = findViewById<EditText>(R.id.key_edit)
+        keyEdit.setText(WeatherStore.getKey(this))
+        findViewById<Button>(R.id.btn_save_key).setOnClickListener {
+            WeatherStore.setKey(this, keyEdit.text.toString())
+            android.widget.Toast.makeText(this, "Key 已保存", android.widget.Toast.LENGTH_SHORT).show()
+            fetchNow(true); fetch24h(true)
         }
 
         findViewById<Button>(R.id.btn_refresh).setOnClickListener {
@@ -280,7 +290,7 @@ class MainActivity : Activity() {
 
     /** 立即拉取 now 实时天气，nextDelayMs>=0 时同时排定下一次 */
     private fun fetchNow(scheduleNext: Boolean) {
-        val key = WeatherStore.DEFAULT_KEY
+        val key = WeatherStore.getKey(this)
         Thread {
             try {
                 val body = QWeatherClient.get("weather/now", state.cityIdx, key)
@@ -296,7 +306,7 @@ class MainActivity : Activity() {
     }
 
     private fun fetch24h(scheduleNext: Boolean) {
-        val key = WeatherStore.DEFAULT_KEY
+        val key = WeatherStore.getKey(this)
         Thread {
             try {
                 val body = QWeatherClient.get("weather/24h", state.cityIdx, key)

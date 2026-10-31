@@ -1,0 +1,41 @@
+name: Release
+
+# tag 只做触发器；版本号单一源头是 app/build.gradle.kts 的 versionName，
+# 附件名在 CI 里从源头读取拼接，禁止在文档/脚本中硬编码版本号。
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Read version from source of truth
+        id: ver
+        run: echo "name=$(grep -oP 'versionName\s*=\s*\"\K[^\"]+' app/build.gradle.kts)" >> "$GITHUB_OUTPUT"
+
+      - name: Build debug APK
+        # CI 上没有 local.properties：QWEATHER_KEY 注入为空串，
+        # 发布的 APK 天然不含任何密钥（用户编译/APP内自行填写）
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Rename artifact
+        run: cp app/build/outputs/apk/debug/app-debug.apk "TempRain-v${{ steps.ver.outputs.name }}.apk"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: TempRain-v*.apk
+          generate_release_notes: true

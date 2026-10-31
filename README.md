@@ -37,6 +37,8 @@ Key 的申请方法见下方[配置](#配置)。
 |---|---|---|
 | `QWEATHER_KEY` | `local.properties`（项目根目录） | 和风天气 API Key，编译期经 `BuildConfig` 注入，源码与 git 仓库中均不出现 |
 
+也可以**在 APP 内填写**：「地区选择」下方有 Key 输入框——编译时注入的 Key 会预填在框里（有的话），没有就手动粘贴后点「保存」，立即生效（输入框清空再保存则回退到编译期注入的 Key）。APP 内保存的 Key 优先于编译期注入的。
+
 ## 说明
 
 ### 获取和风天气 Key（需自行注册）
@@ -112,6 +114,8 @@ See [Configuration](#configuration) for how to obtain a key.
 | Item | File | Description |
 |---|---|---|
 | `QWEATHER_KEY` | `local.properties` (project root) | QWeather API key, injected at build time via `BuildConfig`; never appears in source or the repository |
+
+You can also enter the key **inside the app**: below the city selector there is a key input — a compile-time injected key (if any) is prefilled, otherwise paste yours and tap "保存" (Save) to take effect immediately (clearing the box and saving falls back to the compile-time key). A key saved in-app takes precedence over the compile-time one.
 
 ## Notes
 
