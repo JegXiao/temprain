@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1117"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="☁️ 气象灯板 · TempRain"
+            android:textColor="#58A6FF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <!-- 8x8 灯板预览 -->
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:background="@drawable/widget_bg"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:contentDescription="灯板预览" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="初始化..."
+            android:textColor="#8B949E"
+            android:textSize="13sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center" />
+
+        <!-- 城市选择 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📍 地区选择"
+            android:textColor="#3FB950"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <RadioGroup
+            android:id="@+id/city_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_city_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="城市0"
+                android:textColor="#C9D1D9" />
+
+            <RadioButton
+                android:id="@+id/radio_city_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="城市1"
+                android:textColor="#C9D1D9" />
+        </RadioGroup>
+
+        <!-- 操作按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/btn_refresh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🔄 立即刷新" />
+
+            <Button
+                android:id="@+id/btn_test_toggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:background="#F0883E"
+                android:text="🔬 测试模式" />
+        </LinearLayout>
+
+        <!-- 测试模式面板 -->
+        <LinearLayout
+            android:id="@+id/test_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#161B22"
+            android:padding="12dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="模拟温度"
+                android:textColor="#8B949E"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <SeekBar
+                    android:id="@+id/slider_test_temp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:min="-40"
+                    android:max="40"
+                    android:progress="25" />
+
+                <TextView
+                    android:id="@+id/text_test_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25 °C"
+                    android:textColor="#F0883E"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/check_rain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="有雨"
+                    android:textColor="#6BB6FF" />
+
+                <CheckBox
+                    android:id="@+id/check_snow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="有雪"
+                    android:textColor="#D9E5FF" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_exit_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#6E7681"
+                android:text="🔙 退出模拟，返回正常模式" />
+        </LinearLayout>
+
+        <!-- 调色盘 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎨 灯板调色盘（点色块修改）"
+            android:textColor="#3FB950"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:id="@+id/color_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/btn_reset_colors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="#6E7681"
+            android:text="↺ 恢复默认配色" />
+
+        <!-- 频闪灯时长 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ 频闪亮暗时长（等长）"
+                android:textColor="#F0883E"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/strobe_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp">
+
+                <RadioButton
+                    android:id="@+id/strobe_500"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="500ms"
+                    android:textColor="#C9D1D9"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/strobe_800"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="800ms"
+                    android:textColor="#C9D1D9"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/strobe_1000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000ms"
+                    android:textColor="#C9D1D9"
+                    android:textSize="12sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- 后台保活 -->
+        <Button
+            android:id="@+id/btn_battery_guide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="#6E7681"
+            android:text="⚙️ 后台保活设置（点此开启自启动）" />
+
+        <!-- 说明 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="刷新频率与灯板一致：实时天气每 2 分钟，24h 预报每 10 分钟（APP 在前台时）。桌面小组件受系统限制每 30 分钟兜底刷新，APP 运行时会实时推送。长按桌面空白处 → 小组件 → TempRain 添加。"
+            android:textColor="#555C66"
+            android:textSize="11sp"
+            android:layout_marginTop="14dp" />
+    </LinearLayout>
+</ScrollView>
