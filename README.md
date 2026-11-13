@@ -18,6 +18,15 @@
 - **后台常驻**：前台服务（常驻通知，最低重要性静音）在 APP 退到后台后继续刷新小组件与拉取数据；开机自启
 - **刷新频率**：实时天气与 24h 预报均每 10 分钟一次（与配套的 ESP32 灯板固件完全一致，每日约 288 次请求）
 
+## 下载安装
+
+不想编译的话，直接装现成的：
+
+- **最新版**：[TempRain.apk](https://github.com/JegXiao/temprain/releases/latest/download/TempRain.apk)（恒定文件名，永远指向最新 Release）
+- 历史版本：[Releases 页面](https://github.com/JegXiao/temprain/releases)
+
+Release 包不含任何 API Key，安装后首次运行在 APP 内填写即可（见下方配置）。
+
 ## 快速开始
 
 1. 用 Android Studio 打开本项目（AGP 9.x，JDK 17+，minSdk 24 / Android 7.0+）
@@ -95,6 +104,15 @@ val CITIES = listOf(
 - **Test mode**: temperature slider (−40~40°C) plus rain/snow checkboxes to preview any weather combination
 - **Background persistence**: a foreground service (silent, lowest-importance notification) keeps the widget updated after leaving the app; auto-start on boot
 - **Refresh rate**: both `weather/now` and `weather/24h` are polled every 10 minutes, identical to the companion ESP32 board firmware (~288 requests/day)
+
+## Download
+
+Prefer not to build? Install the ready-made APK:
+
+- **Latest**: [TempRain.apk](https://github.com/JegXiao/temprain/releases/latest/download/TempRain.apk) (constant file name, always the newest Release)
+- Older versions: [Releases page](https://github.com/JegXiao/temprain/releases)
+
+The Release APK contains no API key — enter yours inside the app on first run (see Configuration below).
 
 ## Quick Start
 

@@ -12,6 +12,13 @@ val localProps = Properties().apply {
 }
 val qweatherKey: String = localProps.getProperty("QWEATHER_KEY") ?: ""
 
+// release 签名从项目属性注入（本地 -P 参数 / CI 环境变量转 -P），keystore 与密码永不入库。
+// 未提供时 release 包不签名（本地调试用 debug 包即可）。
+val releaseStoreFile: String? = providers.gradleProperty("RELEASE_STORE_FILE").orNull
+val releaseStorePassword: String? = providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
+val releaseKeyAlias: String? = providers.gradleProperty("RELEASE_KEY_ALIAS").orNull
+val releaseKeyPassword: String? = providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+
 android {
     namespace = "me.jegxiao.temprain"
     compileSdk {
@@ -22,8 +29,8 @@ android {
         applicationId = "me.jegxiao.temprain"
         minSdk = 24
         targetSdk = 37
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -34,8 +41,22 @@ android {
         buildConfig = true
     }
 
+    signingConfigs {
+        if (releaseStoreFile != null) {
+            create("release") {
+                storeFile = file(releaseStoreFile)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (releaseStoreFile != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")

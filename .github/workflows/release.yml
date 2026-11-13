@@ -1,7 +1,7 @@
 name: Release
 
 # tag 只做触发器；版本号单一源头是 app/build.gradle.kts 的 versionName，
-# 附件名在 CI 里从源头读取拼接，禁止在文档/脚本中硬编码版本号。
+# 附件名恒定（TempRain.apk）供 README 直链 releases/latest/download/ 使用。
 on:
   push:
     tags: ['v*']
@@ -26,16 +26,38 @@ jobs:
         id: ver
         run: echo "name=$(grep -oP 'versionName\s*=\s*\"\K[^\"]+' app/build.gradle.kts)" >> "$GITHUB_OUTPUT"
 
-      - name: Build debug APK
+      - name: Decode release keystore
+        env:
+          KS_BASE64: ${{ secrets.KS_BASE64 }}
+        run: echo "$KS_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+
+      - name: Build signed release APK
         # CI 上没有 local.properties：QWEATHER_KEY 注入为空串，
-        # 发布的 APK 天然不含任何密钥（用户编译/APP内自行填写）
-        run: ./gradlew assembleDebug --no-daemon
+        # 发布的 APK 天然不含任何密钥（用户在 APP 内自行填写）
+        env:
+          KS_PASSWORD: ${{ secrets.KS_PASSWORD }}
+          KS_ALIAS: ${{ secrets.KS_ALIAS }}
+          KS_ALIAS_PASSWORD: ${{ secrets.KS_ALIAS_PASSWORD }}
+        run: |
+          ./gradlew assembleRelease --no-daemon \
+            -PRELEASE_STORE_FILE="$RUNNER_TEMP/release.jks" \
+            -PRELEASE_STORE_PASSWORD="$KS_PASSWORD" \
+            -PRELEASE_KEY_ALIAS="$KS_ALIAS" \
+            -PRELEASE_KEY_PASSWORD="$KS_ALIAS_PASSWORD"
+
+      - name: Verify APK signature
+        run: |
+          APK=app/build/outputs/apk/release/app-release.apk
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/apksigner" verify "$APK"
+          "$BT/apksigner" verify --print-certs "$APK" | grep "certificate DN"
 
       - name: Rename artifact
-        run: cp app/build/outputs/apk/debug/app-debug.apk "TempRain-v${{ steps.ver.outputs.name }}.apk"
+        run: cp app/build/outputs/apk/release/app-release.apk TempRain.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: TempRain-v*.apk
+          name: v${{ steps.ver.outputs.name }}
+          files: TempRain.apk
           generate_release_notes: true
