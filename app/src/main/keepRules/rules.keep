@@ -10,3 +10,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# AGP 9.1+ R8 默认启用类重打包（-repackageclasses），会与 Kotlin 集合类的
+# package-private 继承冲突，Release 包启动即崩：
+#   IllegalAccessError: Class kotlin.collections.d extended by class r5 is inaccessible
+# 只关闭重打包，保留 shrink / obfuscation / 其他优化。
+-dontrepackage
